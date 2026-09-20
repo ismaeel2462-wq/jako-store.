@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>JAKO STORE - شحن ببجي موبايل</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #1e1e1e;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+        }
+
+        h1 {
+            color: #ff9800;
+            font-size: 24px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            color: #ff9800;
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #333;
+            background: #2a2a2a;
+            color: #fff;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        select:focus,
+        input:focus {
+            border-color: #ff9800;
+            outline: none;
+        }
+
+        .notice {
+            background: #332200;
+            border: 1px solid #ff9800;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-top: 10px;
+            display: none;
+            color: #ffb74d;
+        }
+
+        .btn-submit {
+            background: #25d366;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+
+        .btn-submit:hover {
+            background: #1ebd58;
+        }
+
+        /* نافذة شام كاش */
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.85);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #2a2a2a;
+            padding: 25px;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid #ff9800;
+            position: relative;
+        }
+
+        .close-icon {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            color: #aaa;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .qrcode-box {
+            width: 220px;
+            height: 220px;
+            margin: 15px auto;
+            border: 2px dashed #ff9800;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qrcode-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .account-number {
+            font-size: 18px;
+            color: #ff9800;
+            font-weight: bold;
+            direction: ltr;
+            margin: 10px 0;
+        }
+
+        .customer-name {
+            margin-top: 15px;
+            text-align: right;
+        }
+
+        .btn-confirm {
+            background: #25d366;
+            color: #fff;
+            border: none;
+            padding: 13px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        .btn-confirm:hover {
+            background: #1ebd58;
+        }
+
+        .btn-close {
+            background: #555;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .btn-close:hover {
+            background: #666;
+        }
+
+        .warning {
+            font-size: 12px;
+            color: #aaa;
+            line-height: 1.7;
+        }
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            .qrcode-box {
+                width: 200px;
+                height: 200px;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- زر الرجوع -->
+
+    <div style="text-align: right; margin-bottom: 20px;">
+
+        <a href="index.html"
+           style="
+           background:#2a2a2a;
+           color:#ff9800;
+           border:1px solid #ff9800;
+           padding:8px 16px;
+           border-radius:6px;
+           text-decoration:none;
+           font-size:14px;
+           font-weight:bold;
+           display:inline-block;
+           ">
+
+            ⬅️
+
+        </a>
+
+    </div>
+
+
+    <h1>
+        🎮 شحن ببجي موبايل - PUBG Mobile
+    </h1>
+
+
+    <!-- Player ID -->
+
+    <div class="form-group">
+
+        <label>
+            أدخل الـ ID الخاص بك (Player ID):
+        </label>
+
+        <input
+            type="text"
+            id="playerId"
+            placeholder="مثال: 5123456789"
+            inputmode="numeric"
+            oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+        >
+
+    </div>
+
+
+    <!-- الباقات -->
+
+    <div class="form-group">
+
+        <label>
+            اختر باقة الشحن المطلوبة:
+        </label>
+
+        <select id="package">
+
+            <option value="60 UC - 1.99$">
+                60 UC - 1.99$
+            </option>
+
+            <option value="325 UC - 5.99$">
+                325 UC - 5.99$
+            </option>
+
+            <option value="660 UC - 10.99$">
+                660 UC - 10.99$
+            </option>
+
+            <option value="1800 UC - 26.99$">
+                1800 UC - 26.99$
+            </option>
+
+            <option value="3850 UC - 52.99$">
+                3850 UC - 52.99$
+            </option>
+
+            <option value="8100 UC - 103.99$">
+                8100 UC - 103.99$
+            </option>
+
+            <option value="🎫 الرويال باس العادي - 6.99$">
+                🎫 الرويال باس العادي - 6.99$
+            </option>
+
+            <option value="👑 الرويال باس البلس - 15.99$">
+                👑 الرويال باس البلس - 15.99$
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <!-- طريقة الدفع -->
+
+    <div class="form-group">
+
+        <label>
+            طريقة الدفع:
+        </label>
+
+        <select
+            id="paymentMethod"
+            onchange="handlePaymentChange()"
+        >
+
+            <option value="">
+                -- اختر طريقة الدفع --
+            </option>
+
+            <option value="شام كاش">
+                شام كاش (Cham Cash)
+            </option>
+
+        </select>
+
+        <div
+            id="paymentNotice"
+            class="notice">
+        </div>
+
+    </div>
+
+
+    <!-- زر واتساب -->
+
+    <button
+        type="button"
+        class="btn-submit"
+        onclick="redirectToWhatsApp()">
+
+        إرسال الطلب عبر الواتساب 💬
+
+    </button>
+
+</div>
+
+
+<!-- ======================================= -->
+<!-- نافذة باركود شام كاش -->
+<!-- ======================================= -->
+
+<div id="qrModal" class="modal">
+
+    <div class="modal-content">
+
+        <span
+            class="close-icon"
+            onclick="closePopup()">
+
+            &times;
+
+        </span>
+
+
+        <h3>
+            📲 مسح باركود شام كاش
+        </h3>
+
+
+        <p>
+            قم بمسح الكود أدناه لإرسال الأموال:
+        </p>
+
+
+        <!-- الباركود -->
+
+        <div class="qrcode-box">
+
+            <img
+                src="qr-code.png"
+                alt="باركود شام كاش"
+                class="qrcode-img">
+
+        </div>
+
+
+        <!-- رقم الحساب -->
+
+        <p style="font-size:15px;color:#ccc;">
+
+            رقم الحساب:
+
+            <strong
+                class="account-number">
+
+                0976567876
+
+            </strong>
+
+        </p>
+
+
+        <!-- اسم الزبون -->
+
+        <div class="customer-name">
+
+            <label>
+                👤 اسم الزبون:
+            </label>
+
+            <input
+                type="text"
+                id="customerName"
+                placeholder="اكتب اسمك هنا">
+
+        </div>
+
+
+        <p class="warning">
+
+            يرجى إتمام التحويل ثم كتابة اسمك والضغط
+            على زر إرسال الطلب.
+
+        </p>
+
+
+        <!-- تأكيد -->
+
+        <button
+            class="btn-confirm"
+            onclick="confirmPayment()">
+
+            ✅ تم التحويل وإرسال الطلب
+
+        </button>
+
+
+        <!-- إلغاء -->
+
+        <button
+            class="btn-close"
+            onclick="closePopup()">
+
+            إلغاء
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /* معلومات المتجر */
+
+    const WHATSAPP_NUMBER = "963982704754";
+
+    const CHAM_CASH_ACCOUNT = "0976567876";
+
+
+    /* تغيير طريقة الدفع */
+
+    function handlePaymentChange() {
+
+        const method =
+            document.getElementById("paymentMethod").value;
+
+        const notice =
+            document.getElementById("paymentNotice");
+
+
+        notice.style.display = "none";
+
+
+        if (method === "شام كاش") {
+
+            notice.style.display = "block";
+
+            notice.innerHTML =
+                "🎯 تم فتح نافذة باركود شام كاش، يرجى إتمام التحويل.";
+
+            document.getElementById("qrModal").style.display = "flex";
+
+        }
+
+    }
+
+
+    /* إغلاق النافذة */
+
+    function closePopup() {
+
+        document.getElementById("qrModal").style.display = "none";
+
+    }
+
+
+    /* الضغط خارج النافذة */
+
+    window.onclick = function(event) {
+
+        const modal =
+            document.getElementById("qrModal");
+
+        if (event.target === modal) {
+
+            closePopup();
+
+        }
+
+    };
+
+
+    /* إرسال الطلب */
+
+    function redirectToWhatsApp() {
+
+        const id =
+            document.getElementById("playerId").value.trim();
+
+        const pkg =
+            document.getElementById("package").value;
+
+        const method =
+            document.getElementById("paymentMethod").value;
+
+
+        if (!id) {
+
+            alert("⚠️ الرجاء إدخال Player ID أولاً.");
+
+            return;
+
+        }
+
+
+        if (!method) {
+
+            alert("⚠️ الرجاء اختيار طريقة الدفع أولاً.");
+
+            return;
+
+        }
+
+
+        if (method === "شام كاش") {
+
+            document.getElementById("qrModal").style.display = "flex";
+
+        }
+
+    }
+
+
+    /* تأكيد الدفع وإرسال واتساب */
+
+    function confirmPayment() {
+
+        const customerName =
+            document.getElementById("customerName").value.trim();
+
+        const id =
+            document.getElementById("playerId").value.trim();
+
+        const pkg =
+            document.getElementById("package").value;
+
+        const method =
+            document.getElementById("paymentMethod").value;
+
+
+        if (!customerName) {
+
+            alert("⚠️ الرجاء كتابة اسم الزبون.");
+
+            document
+                .getElementById("customerName")
+                .focus();
+
+            return;
+
+        }
+
+
+        if (!id) {
+
+            alert("⚠️ الرجاء إدخال Player ID.");
+
+            return;
+
+        }
+
+
+        const message =
+
+`🎮 طلب شحن PUBG Mobile جديد
+
+━━━━━━━━━━━━━━
+
+👤 اسم الزبون:
+${customerName}
+
+🆔 Player ID:
+${id}
+
+📦 الباقة:
+${pkg}
+
+💳 الدفع عن طريق:
+${method}
+
+💰 رقم حساب شام كاش:
+${CHAM_CASH_ACCOUNT}
+
+✅ تم التحويل من قبل الزبون.
+
+━━━━━━━━━━━━━━
+JAKO STORE`;
+
+
+        const whatsappURL =
+            "https://wa.me/" +
+            WHATSAPP_NUMBER +
+            "?text=" +
+            encodeURIComponent(message);
+
+
+        window.location.href = whatsappURL;
+
+    }
+
+</script>
+
+</body>
+</html>
