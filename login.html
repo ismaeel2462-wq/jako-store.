@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>تسجيل الدخول - JAKO STORE</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Tahoma, sans-serif;
+            background: radial-gradient(circle at top, #292929, #121212 50%, #080808);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(30, 30, 30, 0.96);
+            border: 1px solid #333;
+            border-radius: 22px;
+            padding: 35px 28px;
+            box-shadow: 0 10px 40px rgba(0,0,0,.7);
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 30px;
+            font-weight: bold;
+            color: #ff9800;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        .input-group {
+            margin-bottom: 17px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ddd;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            background: #121212;
+            color: white;
+            border: 1px solid #3a3a3a;
+            border-radius: 10px;
+            outline: none;
+            font-size: 15px;
+        }
+
+        input:focus {
+            border-color: #ff9800;
+            box-shadow: 0 0 8px rgba(255,152,0,.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: #ff9800;
+            color: #111;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        button:hover {
+            background: #ffb52e;
+        }
+
+        button:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .secondary-btn {
+            background: transparent;
+            border: 1px solid #444;
+            color: #ff9800;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .secondary-btn:hover {
+            background: rgba(255,152,0,.08);
+        }
+
+        .message {
+            display: none;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 13px;
+            line-height: 1.7;
+            white-space: pre-line;
+        }
+
+        .success {
+            display: block;
+            background: rgba(0,200,100,.1);
+            color: #4cff9b;
+            border: 1px solid rgba(0,200,100,.2);
+        }
+
+        .error {
+            display: block;
+            background: rgba(255,50,50,.1);
+            color: #ff6b6b;
+            border: 1px solid rgba(255,50,50,.2);
+        }
+
+        .register-text,
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 22px;
+            font-size: 14px;
+        }
+
+        .register-text {
+            color: #aaa;
+        }
+
+        a {
+            color: #ff9800;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back {
+            color: #777;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-box">
+
+    <div class="logo">🎮 JAKO STORE</div>
+
+    <div class="subtitle">
+        سجل دخولك لإرسال طلباتك
+    </div>
+
+    <form id="loginForm">
+
+        <div class="input-group">
+            <label for="email">البريد الإلكتروني</label>
+
+            <input
+                type="email"
+                id="email"
+                placeholder="example@email.com"
+                autocomplete="email"
+                required
+            >
+        </div>
+
+        <div class="input-group">
+            <label for="password">كلمة المرور</label>
+
+            <input
+                type="password"
+                id="password"
+                placeholder="أدخل كلمة المرور"
+                autocomplete="current-password"
+                required
+            >
+        </div>
+
+        <button type="submit" id="loginBtn">
+            تسجيل الدخول
+        </button>
+
+        <button
+            type="button"
+            class="secondary-btn"
+            id="forgotBtn"
+        >
+            نسيت كلمة المرور؟
+        </button>
+
+        <div id="message" class="message"></div>
+
+    </form>
+
+    <div class="register-text">
+        ليس لديك حساب؟
+        <a href="register.html">إنشاء حساب جديد</a>
+    </div>
+
+    <a href="index.html" class="back">
+        ← العودة إلى المتجر
+    </a>
+
+</div>
+
+<script>
+
+    const SUPABlASE_URL =
+        "https://anfpisxylmvclheoehnh.supabase.co";
+
+    const SUPABASE_KEY =
+        "sb_publishable_B9JjVM8dQpDnOOMaK_QIKg_kXlud85S";
+
+
+    const { createClient } = supabase;
+
+const supabaseClient = createClient(
+    "https://anfpisxylmvclheoehnh.supabase.co",
+    "sb_publishable_B9JjVM8dQpDnOOMaK_QIKg_kXlud85S"
+);
+
+
+    const loginForm =
+        document.getElementById("loginForm");
+
+    const emailInput =
+        document.getElementById("email");
+
+    const passwordInput =
+        document.getElementById("password");
+
+    const loginBtn =
+        document.getElementById("loginBtn");
+
+    const forgotBtn =
+        document.getElementById("forgotBtn");
+
+    const message =
+        document.getElementById("message");
+
+
+    function showMessage(text, type) {
+
+        message.textContent = text;
+
+        message.className =
+            "message " + type;
+
+        message.style.display = "block";
+    }
+
+
+    // ==========================================
+    // تسجيل الدخول
+    // ==========================================
+
+    loginForm.addEventListener(
+        "submit",
+        async function(e) {
+
+            e.preventDefault();
+
+            message.style.display = "none";
+
+
+            const email =
+                emailInput.value.trim().toLowerCase();
+
+            const password =
+                passwordInput.value;
+
+
+            if (!email || !password) {
+
+                showMessage(
+                    "❌ أدخل البريد الإلكتروني وكلمة المرور.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            loginBtn.disabled = true;
+
+            loginBtn.textContent =
+                "جاري تسجيل الدخول...";
+
+
+            try {
+
+                const { data, error } =
+                    await supabaseClient.auth.signInWithPassword({
+
+                        email: email,
+
+                        password: password
+
+                    });
+
+
+                if (error) {
+
+                    throw error;
+
+                }
+
+
+                if (!data.session) {
+
+                    showMessage(
+                        "❌ لم يتم إنشاء جلسة تسجيل الدخول.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                showMessage(
+                    "✅ تم تسجيل الدخول بنجاح!",
+                    "success"
+                );
+
+
+                /*
+                    إذا كان المستخدم جاء من صفحة منتج
+                    سيتم إعادته إليها.
+                */
+
+                const returnPage =
+                    localStorage.getItem("returnAfterLogin");
+
+
+                setTimeout(function() {
+
+                    if (returnPage) {
+
+                        localStorage.removeItem(
+                            "returnAfterLogin"
+                        );
+
+                        window.location.href =
+                            returnPage;
+
+                    } else {
+
+                        window.location.href =
+                            "index.html";
+
+                    }
+
+                }, 800);
+
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                let errorMessage =
+                    error.message || "";
+
+
+                if (
+                    errorMessage
+                    .toLowerCase()
+                    .includes("invalid login credentials")
+                ) {
+
+                    errorMessage =
+                        "❌ البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+
+                }
+
+                else if (
+                    errorMessage
+                    .toLowerCase()
+                    .includes("email not confirmed")
+                ) {
+
+                    errorMessage =
+                        "📧 يجب تأكيد البريد الإلكتروني أولًا.\n\nافتح رسالة التأكيد التي أرسلها Supabase إلى بريدك الإلكتروني.";
+
+                }
+
+                else if (
+                    errorMessage
+                    .toLowerCase()
+                    .includes("rate limit")
+                ) {
+
+                    errorMessage =
+                        "⏳ تم تجاوز حد المحاولات مؤقتًا.\n\nانتظر قليلًا ثم حاول مرة أخرى.";
+
+                }
+
+                else {
+
+                    errorMessage =
+                        "❌ حدث خطأ أثناء تسجيل الدخول:\n" +
+                        errorMessage;
+
+                }
+
+
+                showMessage(
+                    errorMessage,
+                    "error"
+                );
+
+            }
+
+
+            loginBtn.disabled = false;
+
+            loginBtn.textContent =
+                "تسجيل الدخول";
+
+        }
+    );
+
+
+    // ==========================================
+    // نسيت كلمة المرور
+    // ==========================================
+
+    forgotBtn.addEventListener(
+        "click",
+        async function() {
+
+            const email =
+                emailInput.value.trim().toLowerCase();
+
+
+            if (!email) {
+
+                showMessage(
+                    "📧 أدخل بريدك الإلكتروني أولًا، ثم اضغط على «نسيت كلمة المرور؟».",
+                    "error"
+                );
+
+                emailInput.focus();
+
+                return;
+            }
+
+
+            forgotBtn.disabled = true;
+
+            forgotBtn.textContent =
+                "جاري الإرسال...";
+
+
+            try {
+
+                const redirectUrl =
+                    window.location.origin +
+                    window.location.pathname
+                        .replace(
+                            "login.html",
+                            "reset-password.html"
+                        );
+
+
+                const { error } =
+                    await supabaseClient.auth
+                        .resetPasswordForEmail(
+                            email,
+                            {
+                                redirectTo: redirectUrl
+                            }
+                        );
+
+
+                if (error) {
+
+                    throw error;
+
+                }
+
+
+                showMessage(
+                    "📧 تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني.\n\nتحقق من البريد الوارد ومجلد الرسائل غير المرغوب فيها.",
+                    "success"
+                );
+
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                if (
+                    error.message
+                    .toLowerCase()
+                    .includes("rate limit")
+                ) {
+
+                    showMessage(
+                        "⏳ تم تجاوز حد إرسال البريد مؤقتًا.\n\nانتظر قليلًا قبل المحاولة مرة أخرى.",
+                        "error"
+                    );
+
+                } else {
+
+                    showMessage(
+                        "❌ تعذر إرسال رابط إعادة تعيين كلمة المرور:\n" +
+                        error.message,
+                        "error"
+                    );
+
+                }
+
+            }
+
+
+            forgotBtn.disabled = false;
+
+            forgotBtn.textContent =
+                "نسيت كلمة المرور؟";
+
+        }
+    );
+
+</script>
+
+</body>
+</html>
