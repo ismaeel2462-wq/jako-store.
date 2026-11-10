@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>JAKO STORE - متجر الشحن السريع</title>
+
+    <style>
+.login-top-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+
+    background: #ff9800;
+    color: #111;
+
+    padding: 10px 16px;
+    border-radius: 10px;
+
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+
+    transition: 0.3s;
+    z-index: 1000;
+}
+
+.login-top-btn:hover {
+    background: #ffb52e;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 152, 0, 0.3);
+}
+
+@media (max-width: 600px) {
+    .login-top-btn {
+        top: 12px;
+        right: 12px;
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Tahoma, sans-serif;
+            background:
+                radial-gradient(circle at top, #252525 0%, #121212 45%, #080808 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        /* الحاوية الرئيسية */
+
+        .container {
+            width: 92%;
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 35px;
+            background: rgba(25, 25, 25, 0.96);
+            border: 1px solid #333;
+            border-radius: 22px;
+            box-shadow:
+                0 15px 50px rgba(0,0,0,0.7),
+                0 0 35px rgba(255,152,0,0.05);
+        }
+
+
+        /* الهيدر */
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo {
+            font-size: 34px;
+            font-weight: 900;
+            color: #ff9800;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(255,152,0,0.35);
+        }
+
+        .subtitle {
+            margin-top: 10px;
+            color: #999;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+
+        /* عنوان القسم */
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            color: #ff9800;
+            font-size: 18px;
+            font-weight: bold;
+
+            margin: 30px 0 15px;
+            padding-bottom: 10px;
+
+            border-bottom: 1px solid #333;
+        }
+
+
+        /* شبكة المنتجات */
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+
+        /* بطاقة اللعبة / التطبيق */
+
+        .store-btn {
+            position: relative;
+
+            display: flex;
+            align-items: center;
+
+            gap: 14px;
+
+            min-height: 88px;
+
+            padding: 12px;
+
+            background: linear-gradient(
+                145deg,
+                #292929,
+                #1d1d1d
+            );
+
+            color: #fff;
+
+            border: 1px solid #363636;
+            border-radius: 14px;
+
+            text-decoration: none;
+
+            transition:
+                transform 0.25s ease,
+                border-color 0.25s ease,
+                box-shadow 0.25s ease,
+                background 0.25s ease;
+
+            overflow: hidden;
+        }
+
+
+        /* خط برتقالي صغير */
+
+        .store-btn::before {
+            content: "";
+
+            position: absolute;
+
+            right: 0;
+            top: 0;
+
+            width: 3px;
+            height: 100%;
+
+            background: #ff9800;
+
+            opacity: 0;
+
+            transition: 0.25s;
+        }
+
+
+        /* الصورة */
+
+        .store-btn img {
+            width: 62px;
+            height: 62px;
+
+            object-fit: cover;
+
+            border-radius: 14px;
+
+            flex-shrink: 0;
+
+            border: 1px solid #444;
+
+            background: #111;
+
+            transition: 0.25s;
+        }
+
+
+        /* معلومات المنتج */
+
+        .app-info {
+            text-align: right;
+            flex: 1;
+        }
+
+        .app-name {
+            display: block;
+
+            font-size: 16px;
+            font-weight: bold;
+
+            margin-bottom: 6px;
+        }
+
+        .app-name-en {
+            display: block;
+
+            color: #888;
+
+            font-size: 12px;
+        }
+
+
+        /* سهم */
+
+        .arrow {
+            color: #666;
+            font-size: 20px;
+
+            transition: 0.25s;
+        }
+
+
+        /* تأثير المرور */
+
+        .store-btn:hover {
+            transform: translateY(-4px);
+
+            border-color: #ff9800;
+
+            background: linear-gradient(
+                145deg,
+                #30250f,
+                #202020
+            );
+
+            box-shadow:
+                0 10px 25px rgba(0,0,0,0.5),
+                0 0 18px rgba(255,152,0,0.12);
+        }
+
+        .store-btn:hover::before {
+            opacity: 1;
+        }
+
+        .store-btn:hover img {
+            transform: scale(1.07);
+            border-color: #ff9800;
+        }
+
+        .store-btn:hover .arrow {
+            color: #ff9800;
+            transform: translateX(-4px);
+        }
+
+
+        /* الفوتر */
+
+        .footer {
+            text-align: center;
+
+            margin-top: 40px;
+            padding-top: 20px;
+
+            border-top: 1px solid #292929;
+
+            color: #666;
+            font-size: 12px;
+        }
+
+        .footer strong {
+            color: #ff9800;
+        }
+
+
+        /* الهاتف */
+
+        @media (max-width: 600px) {
+
+            .container {
+                width: 94%;
+                padding: 22px 15px;
+                margin: 20px auto;
+                border-radius: 18px;
+            }
+
+            .logo {
+                font-size: 28px;
+            }
+
+            .subtitle {
+                font-size: 13px;
+            }
+
+            .grid-container {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .store-btn {
+                min-height: 82px;
+            }
+
+            .store-btn img {
+                width: 58px;
+                height: 58px;
+            }
+
+        }
+
+
+        /* الشاشات الكبيرة */
+
+        @media (min-width: 800px) {
+
+            .grid-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+    <a href="login.html" class="login-top-btn">
+    🔐 تسجيل الدخول
+</a>
+
+
+<div class="container">
+
+
+    <!-- الهيدر -->
+
+    <div class="header">
+
+        <div class="logo">
+            🎮 JAKO STORE
+        </div>
+
+        <p class="subtitle">
+            متجر الشحن السريع للألعاب والتطبيقات
+            <br>
+            اختر اللعبة أو التطبيق وابدأ طلبك بسهولة
+        </p>
+
+    </div>
+
+
+
+    <!-- ========================= -->
+    <!-- الألعاب -->
+    <!-- ========================= -->
+
+    <div class="section-title">
+        🎮 ألعاب الجيمنج
+    </div>
+
+
+    <div class="grid-container">
+
+
+        <!-- PUBG -->
+
+        <a href="pubg.html" class="store-btn">
+
+            <img src="pubg.jpg" alt="PUBG Mobile">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    ببجي موبايل
+                </span>
+
+                <span class="app-name-en">
+                    PUBG Mobile
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+
+        <!-- Free Fire -->
+
+        <a href="freefire.html" class="store-btn">
+
+            <img src="freefire.jpg" alt="Free Fire">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    فري فاير
+                </span>
+
+                <span class="app-name-en">
+                    Free Fire
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+
+        <!-- Call of Duty -->
+
+        <a href="cod.html" class="store-btn">
+
+            <img src="cod.jpg" alt="Call of Duty">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    كول أوف ديوتي
+                </span>
+
+                <span class="app-name-en">
+                    Call of Duty
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+
+        <!-- Clash -->
+
+        <a href="clash.html" class="store-btn">
+
+            <img src="clash.jpg" alt="Clash of Clans">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    كلاش أوف كلانس
+                </span>
+
+                <span class="app-name-en">
+                    Clash of Clans
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+
+        <!-- Ludo -->
+
+        <a href="ludo.html" class="store-btn">
+
+            <img src="ludo.jpg" alt="Ludo King">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    لودو كينج
+                </span>
+
+                <span class="app-name-en">
+                    Ludo King
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+
+        <!-- PES -->
+
+        <a href="pes.html" class="store-btn">
+
+            <img src="pes.jpg" alt="eFootball">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    إي فوتبول
+                </span>
+
+                <span class="app-name-en">
+                    eFootball
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+
+        <!-- Roblox -->
+
+        <a href="roblox.html" class="store-btn">
+
+            <img src="roblox.jpg" alt="Roblox">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    روبلوكس
+                </span>
+
+                <span class="app-name-en">
+                    Roblox Robux
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+    </div>
+
+
+
+    <!-- ========================= -->
+    <!-- التطبيقات -->
+    <!-- ========================= -->
+
+    <div class="section-title">
+        📱 تطبيقات الدردشة واللايف
+    </div>
+
+
+    <div class="grid-container">
+
+
+        <!-- TikTok -->
+
+        <a href="tiktok.html" class="store-btn">
+
+            <img src="tiktok.jpg" alt="TikTok">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    تيك توك
+                </span>
+
+                <span class="app-name-en">
+                    TikTok Coins
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+
+        <!-- Poppo -->
+
+        <a href="poppo.html" class="store-btn">
+
+            <img src="poppo.jpg" alt="Poppo Live">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    بوبو لايف
+                </span>
+
+                <span class="app-name-en">
+                    Poppo Live
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+
+        <!-- Bigo -->
+
+        <a href="bigo.html" class="store-btn">
+
+            <img src="bigo.jpg" alt="Bigo Live">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    بيجو لايف
+                </span>
+
+                <span class="app-name-en">
+                    Bigo Live
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+
+        <!-- YaAhlan -->
+
+        <a href="yaahlan.html" class="store-btn">
+
+            <img src="yaahlan.jpg" alt="YaAhlan">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    يا أهلاً
+                </span>
+
+                <span class="app-name-en">
+                    YaAhlan
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+
+        <!-- Yalla -->
+
+        <a href="yalla.html" class="store-btn">
+
+            <img src="yalla.jpg" alt="Yalla Ludo">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    يلا لودو
+                </span>
+
+                <span class="app-name-en">
+                    Yalla Ludo
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+
+        <!-- Tango -->
+
+        <a href="tango.html" class="store-btn">
+
+            <img src="tango.jpg" alt="Tango Live">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    تانجو
+                </span>
+
+                <span class="app-name-en">
+                    Tango Live
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+
+        <!-- Mico -->
+
+        <a href="mico.html" class="store-btn">
+
+            <img src="mico.jpg" alt="Mico">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    ميكو لايف
+                </span>
+
+                <span class="app-name-en">
+                    Mico Coins
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+    </div>
+
+
+
+    <!-- الفوتر -->
+
+    <div class="footer">
+
+        جميع الحقوق محفوظة ©
+        <strong>JAKO STORE</strong>
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

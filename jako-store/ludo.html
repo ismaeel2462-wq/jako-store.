@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JAKO STORE - شحن لودو كينج</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; text-align: center; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; background: #1e1e1e; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.8); }
+        h1 { color: #ff9800; font-size: 24px; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; text-align: right; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; color: #ff9800; }
+        select, input { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #333; background: #2a2a2a; color: #fff; box-sizing: border-box; font-size: 14px; }
+        select:focus, input:focus { border-color: #ff9800; outline: none; }
+        .notice { background: #332200; border: 1px solid #ff9800; padding: 12px; border-radius: 6px; font-size: 13px; margin-top: 10px; display: none; color: #ffb74d; }
+        .btn-submit { background: #25d366; color: #fff; font-size: 18px; font-weight: bold; padding: 14px; border: none; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 20px; transition: 0.3s; }
+        .btn-submit:hover { background: #1ebd58; }
+        
+        /* ستايل نافذة الباركود المنبثقة */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); justify-content: center; align-items: center; }
+        .modal-content { background-color: #2a2a2a; padding: 25px; border-radius: 12px; max-width: 400px; width: 90%; text-align: center; border: 1px solid #ff9800; position: relative; }
+        .close-icon { position: absolute; top: 10px; left: 15px; color: #aaa; font-size: 24px; cursor: pointer; }
+        .qrcode-box { width: 220px; height: 220px; margin: 15px auto; border: 2px dashed #ff9800; background: #1a1a1a; display: flex; align-items: center; justify-content: center; }
+        .qrcode-img { width: 100%; height: 100%; object-fit: contain; }
+        .btn-close { background: #ff9800; color: #121212; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; width: 100%; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- زر الرجوع إلى الواجهة الرئيسية -->
+<div style="text-align: right; margin-bottom: 20px;">
+    <a href="index.html" style="background: #2a2a2a; color: #ff9800; border: 1px solid #ff9800; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: bold; transition: 0.3s; display: inline-block;">
+        ⬅️
+    </a>
+</div>
+    <h1>🎲 شحن لودو كينج - Ludo King</h1>
+    
+    <form id="orderForm">
+        <!-- 1. إدخال المعرف ID -->
+        <div class="form-group">
+            <label>أدخل الـ ID الخاص بك (Player ID):</label>
+            <input type="text" id="playerId" placeholder="مثال: 4521487" required>
+        </div>
+
+        <!-- 2. فئات الشحن المستقلة للودو كينج -->
+        <div class="form-group">
+            <label>اختر باقة الشحن المطلوبة:</label>
+            <select id="package">
+                <optgroup label="💰 قطع نقدية (Coins)">
+    <option value="50,000 قطعة نقدية - 0.99$">50,000 قطعة نقدية - 0.99$</option>
+    <option value="250,000 قطعة نقدية - 3.99$">250,000 قطعة نقدية - 3.99$</option>
+    <option value="500,000 قطعة نقدية - 5.99$">500,000 قطعة نقدية - 5.99$</option>
+    <option value="1,000,000 قطعة نقدية - 9.99$">1,000,000 قطعة نقدية - 9.99$</option>
+    <option value="5,000,000 قطعة نقدية - 41.99$">5,000,000 قطعة نقدية - 41.99$</option>
+</optgroup>
+<optgroup label="💎 جواهر (Diamonds)">
+    <option value="50 جوهرة - 0.99$">50 جوهرة - 0.99$</option>
+    <option value="250 جوهرة - 5.99$">250 جوهرة - 5.99$</option>
+    <option value="500 جوهرة - 9.99$">500 جوهرة - 9.99$</option>
+    <option value="2500 جوهرة - 41.99$">2500 جوهرة - 41.99$</option>
+</optgroup>
+            </select>
+        </div>
+
+        <!-- 3. طريقة الدفع -->
+        <div class="form-group">
+            <label>طريقة الدفع:</label>
+            <select id="paymentMethod" onchange="handlePaymentChange()">
+                <option value="">-- اختر طريقة الدفع --</option>
+                <option value="شام كاش">شام كاش (Cham Cash)</option>
+                <option value="بطاقات جوجل بلاي">بطاقة جوجل بلاي (Google Play)</option>
+            </select>
+            <div id="paymentNotice" class="notice"></div>
+        </div>
+
+        <!-- 4. حقل كود بطاقة جوجل بلاي -->
+        <div class="form-group" id="googleCodeGroup" style="display: none;">
+            <label>أدخل كود بطاقة جوجل بلاي المكون من 16 رمزاً:</label>
+            <input type="text" id="googleCode" placeholder="أدخل الكود هنا">
+        </div>
+
+        <button type="button" class="btn-submit" onclick="redirectToWhatsApp()">إرسال الطلب عبر الواتساب 💬</button>
+    </form>
+</div>
+
+<!-- النافذة المنبثقة للباركود الخاص بشام كاش -->
+<div id="qrModal" class="modal">
+    <div class="modal-content">
+        <span class="close-icon" onclick="closePopup()">&times;</span>
+        <h3>📲 مسح باركود شام كاش</h3>
+        <p>قم بمسح الكود أدناه لإرسال الأموال:</p>
+        
+        <div class="qrcode-box">
+            <img src="qr-code.png" alt="[ضع صورتك باسم qr-code.png هنا]" class="qrcode-img" onerror="this.style.display='none';">
+        </div>
+        
+        <p style="font-size: 15px; color: #ccc;">رقم الحساب: <strong style="color:#ff9800;" id="accountNum">09xxxxxxxx</strong></p>
+        <p style="font-size: 12px; color: #aaa;">يرجى تصوير إشعار التحويل لإرفاقه في محادثة الواتساب.</p>
+        <button class="btn-close" onclick="closePopup()">موافق، تم التحويل</button>
+    </div>
+</div>
+
+<script>
+    // ⚠️ ضع رقم واتسابك ورقم شام كاش الفعليين هنا
+    const WHATSAPP_NUMBER = "9639xxxxxxxx"; 
+    const CHAM_CASH_ACCOUNT = "09xxxxxxxx"; 
+
+    function handlePaymentChange() {
+        const method = document.getElementById("paymentMethod").value;
+        const notice = document.getElementById("paymentNotice");
+        const googleGroup = document.getElementById("googleCodeGroup");
+        const modal = document.getElementById("qrModal");
+
+        notice.style.display = "none";
+        googleGroup.style.display = "none";
+        modal.style.display = "none";
+
+        if (method === "شام كاش") {
+            notice.style.display = "block";
+            notice.innerHTML = "🎯 تم فتح نافذة باركود شام كاش، يرجى إتمام التحويل.";
+            document.getElementById("accountNum").innerText = CHAM_CASH_ACCOUNT;
+            modal.style.display = "flex"; 
+        } else if (method === "بطاقات جوجل بلاي") {
+            googleGroup.style.display = "block";
+            notice.style.display = "block";
+            notice.innerHTML = "💳 يرجى كتابة كود البطاقة بالأسفل بدقة.";
+        }
+    }
+
+    function closePopup() {
+        document.getElementById("qrModal").style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById("qrModal");
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    function redirectToWhatsApp() {
+        const id = document.getElementById("playerId").value;
+        const pkg = document.getElementById("package").value;
+        const method = document.getElementById("paymentMethod").value;
+        const gCode = document.getElementById("googleCode").value;
+
+        if (!id || !method) {
+            alert("الرجاء إدخال الـ ID واختيار طريقة الدفع أولاً!");
+            return;
+        }
+        if (method === "بطاقات جوجل بلاي" && !gCode.trim()) {
+            alert("الرجاء إدخال كود بطاقة جوجل بلاي!");
+            return;
+        }
+
+        let text = "طلب شحن لودو كينج جديد:%0A" +
+                   "🆔 المعرّف (ID): " + id + "%0A" +
+                   "📦 الفئة المحددة: " + pkg + "%0A" +
+                   "💳 الدفع عن طريق: " + method;
+
+        if (method === "بطاقات جوجل بلاي") {
+            text += "%0A" + "🔑 كود البطاقة: " + gCode;
+        } else if (method === "شام كاش") {
+            text += "%0A" + "📸 (سأقوم بإرفاق صورة إشعار التحويل عبر المحادثة)";
+        }
+
+        window.open("https://wa.me" + WHATSAPP_NUMBER + "?text=" + text, '_blank');
+    }
+</script>
+
+</body>
+</html>

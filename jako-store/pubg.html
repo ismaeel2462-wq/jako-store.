@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>JAKO STORE - شحن ببجي موبايل</title>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #1e1e1e;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+        }
+
+        h1 {
+            color: #ff9800;
+            font-size: 24px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            color: #ff9800;
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #333;
+            background: #2a2a2a;
+            color: #fff;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        select:focus,
+        input:focus {
+            border-color: #ff9800;
+            outline: none;
+        }
+
+        .notice {
+            background: #332200;
+            border: 1px solid #ff9800;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-top: 10px;
+            display: none;
+            color: #ffb74d;
+        }
+
+        .btn-submit {
+            background: #25d366;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .btn-submit:hover {
+            background: #20bd5a;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.85);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #2a2a2a;
+            padding: 25px;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid #ff9800;
+            position: relative;
+        }
+
+        .close-icon {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            color: #aaa;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .qrcode-box {
+            width: 220px;
+            height: 220px;
+            margin: 15px auto;
+            border: 2px dashed #ff9800;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qrcode-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .btn-close {
+            background: #ff9800;
+            color: #121212;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .btn-close:hover {
+            background: #ffb52e;
+        }
+
+        .cancel-btn {
+            background: #555;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .cancel-btn:hover {
+            background: #666;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- زر الرجوع -->
+    <div style="text-align: right; margin-bottom: 20px;">
+        <a href="index.html"
+           style="background: #2a2a2a;
+                  color: #ff9800;
+                  border: 1px solid #ff9800;
+                  padding: 8px 16px;
+                  border-radius: 6px;
+                  text-decoration: none;
+                  font-size: 14px;
+                  font-weight: bold;
+                  display: inline-block;">
+            ⬅️
+        </a>
+    </div>
+
+    <h1>🎮 شحن ببجي موبايل - PUBG Mobile</h1>
+
+    <form id="orderForm">
+
+        <!-- ID -->
+        <div class="form-group">
+
+            <label>
+                أدخل الـ ID الخاص بك (Player ID):
+            </label>
+
+            <input
+                type="text"
+                id="playerId"
+                placeholder="أدخل الـ ID الخاص بك (أرقام فقط)"
+                inputmode="numeric"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                required
+            >
+
+        </div>
+
+
+        <!-- الباقة -->
+        <div class="form-group">
+
+            <label>
+                اختر كمية الشدات (UC):
+            </label>
+
+            <select id="package">
+
+                <option value="60 شدة (UC) - 1.99$">
+                    60 شدة (UC) - 1.99$
+                </option>
+
+                <option value="325 شدة (UC) - 5.99$">
+                    325 شدة (UC) - 5.99$
+                </option>
+
+                <option value="660 شدة (UC) - 10.99$">
+                    660 شدة (UC) - 10.99$
+                </option>
+
+                <option value="1800 شدة (UC) - 26.99$">
+                    1800 شدة (UC) - 26.99$
+                </option>
+
+                <option value="3850 شدة (UC) - 52.99$">
+                    3850 شدة (UC) - 52.99$
+                </option>
+
+                <option value="8100 شدة (UC) - 103.99$">
+                    8100 شدة (UC) - 103.99$
+                </option>
+
+                <option value="🎫 الرويال باس العادي (Elite Pass) - 6.99$">
+                    🎫 الرويال باس العادي (Elite Pass) - 6.99$
+                </option>
+
+                <option value="👑 الرويال باس البلس (Elite Plus) - 15.99$">
+                    👑 الرويال باس البلس (Elite Plus) - 15.99$
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- طريقة الدفع -->
+        <div class="form-group">
+
+            <label>
+                طريقة الدفع:
+            </label>
+
+            <select
+                id="paymentMethod"
+                onchange="handlePaymentChange()">
+
+                <option value="">
+                    -- اختر طريقة الدفع --
+                </option>
+
+                <option value="شام كاش">
+                    شام كاش (Cham Cash)
+                </option>
+
+                <option value="بطاقات جوجل بلاي">
+                    بطاقة جوجل بلاي (Google Play)
+                </option>
+
+            </select>
+
+            <div
+                id="paymentNotice"
+                class="notice">
+            </div>
+
+        </div>
+
+
+        <!-- كود جوجل بلاي -->
+        <div
+            class="form-group"
+            id="googleCodeGroup"
+            style="display: none;">
+
+            <label>
+                أدخل كود بطاقة جوجل بلاي:
+            </label>
+
+            <input
+                type="text"
+                id="googleCode"
+                placeholder="أدخل الـ 16 رمزاً الخاص بالبطاقة"
+            >
+
+        </div>
+
+
+        <!-- إرسال الطلب -->
+        <button
+            type="button"
+            class="btn-submit"
+            onclick="redirectToWhatsApp()">
+
+            إرسال الطلب عبر الواتساب 💬
+
+        </button>
+
+    </form>
+
+</div>
+
+
+<!-- نافذة شام كاش -->
+<div id="qrModal" class="modal">
+
+    <div class="modal-content">
+
+        <span
+            class="close-icon"
+            onclick="closePopup()">
+
+            &times;
+
+        </span>
+
+
+        <h3>
+            📲 تحويل عبر شام كاش
+        </h3>
+
+
+        <p>
+            قم بتحويل المبلغ إلى الحساب التالي:
+        </p>
+
+
+        <!-- QR -->
+        <div class="qrcode-box">
+
+            <img
+                src="qr-code.png"
+                alt="QR Code"
+                class="qrcode-img"
+                onerror="this.style.display='none';"
+            >
+
+        </div>
+
+
+        <p style="font-size:15px; color:#ccc;">
+
+            رقم الحساب:
+
+            <strong
+                style="color:#ff9800;"
+                id="accountNum">
+
+                0976567876
+
+            </strong>
+
+        </p>
+
+
+        <p style="color:#ffb74d; font-size:13px;">
+
+            بعد إتمام التحويل اضغط على الزر أدناه
+            لإرسال تفاصيل الطلب عبر واتساب.
+
+        </p>
+
+
+        <!-- تأكيد التحويل -->
+        <button
+            class="btn-close"
+            onclick="confirmChamCash()">
+
+            ✅ موافق، تم التحويل وإرسال الطلب
+
+        </button>
+
+
+        <button
+            class="cancel-btn"
+            onclick="closePopup()">
+
+            إلغاء
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    // ==========================================
+    // إعداد Supabase
+    // ==========================================
+
+    const SUPABASE_URL =
+        "https://hhstmixtubmsueeinmgl.supabase.co";
+
+
+    // ضع هنا نفس Publishable Key الموجود
+    // في login.html و register.html
+
+    const SUPABASE_KEY =
+        "sb_publishable_tX2-nOQPMGhcnHnelJLIFg_Ya7fygLt";
+
+
+    const { createClient } = supabase;
+
+
+    const supabaseClient =
+        createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
+
+    // ==========================================
+    // بيانات المتجر
+    // ==========================================
+
+    const WHATSAPP_NUMBER =
+        "963982704754";
+
+
+    const CHAM_CASH_ACCOUNT =
+        "0976567876";
+
+
+    // ==========================================
+    // التحقق من تسجيل الدخول
+    // ==========================================
+
+    async function checkLogin() {
+
+        const {
+            data: { session }
+        } = await supabaseClient.auth.getSession();
+
+
+        return session;
+
+    }
+
+
+    // ==========================================
+    // التعامل مع طريقة الدفع
+    // ==========================================
+
+    function handlePaymentChange() {
+
+        const method =
+            document.getElementById("paymentMethod").value;
+
+
+        const notice =
+            document.getElementById("paymentNotice");
+
+
+        const googleGroup =
+            document.getElementById("googleCodeGroup");
+
+
+        const modal =
+            document.getElementById("qrModal");
+
+
+        notice.style.display = "none";
+
+        googleGroup.style.display = "none";
+
+        modal.style.display = "none";
+
+
+        // شام كاش
+        if (method === "شام كاش") {
+
+            notice.style.display = "block";
+
+
+            notice.innerHTML =
+                "💰 تم اختيار شام كاش. يرجى إتمام التحويل من خلال النافذة.";
+
+
+            document.getElementById("accountNum").innerText =
+                CHAM_CASH_ACCOUNT;
+
+
+            modal.style.display = "flex";
+
+        }
+
+
+        // Google Play
+        else if (method === "بطاقات جوجل بلاي") {
+
+            googleGroup.style.display = "block";
+
+
+            notice.style.display = "block";
+
+
+            notice.innerHTML =
+                "💳 يرجى كتابة كود بطاقة جوجل بلاي بالأسفل بدقة.";
+
+        }
+
+    }
+
+
+    // ==========================================
+    // إغلاق نافذة شام كاش
+    // ==========================================
+
+    function closePopup() {
+
+        document.getElementById("qrModal").style.display =
+            "none";
+
+    }
+
+
+    // ==========================================
+    // تأكيد شام كاش
+    // ==========================================
+
+    async function confirmChamCash() {
+
+        // التحقق من تسجيل الدخول
+        const session =
+            await checkLogin();
+
+
+        if (!session) {
+
+            closePopup();
+
+
+            alert(
+                "🔐 يجب تسجيل الدخول أولًا لإرسال الطلب."
+            );
+
+
+            // حفظ الصفحة الحالية
+            localStorage.setItem(
+                "returnAfterLogin",
+                window.location.href
+            );
+
+
+            // الذهاب لتسجيل الدخول
+            window.location.href =
+                "login.html";
+
+
+            return;
+
+        }
+
+
+        const method =
+            document.getElementById("paymentMethod").value;
+
+
+        if (method !== "شام كاش") {
+
+            closePopup();
+
+            return;
+
+        }
+
+
+        closePopup();
+
+
+        sendWhatsAppOrder();
+
+    }
+
+
+    // ==========================================
+    // زر إرسال الطلب
+    // ==========================================
+
+    async function redirectToWhatsApp() {
+
+        // التحقق من تسجيل الدخول
+        const session =
+            await checkLogin();
+
+
+        if (!session) {
+
+            alert(
+                "🔐 يجب تسجيل الدخول أولًا لإرسال الطلب."
+            );
+
+
+            // حفظ الصفحة الحالية
+            localStorage.setItem(
+                "returnAfterLogin",
+                window.location.href
+            );
+
+
+            // الذهاب إلى صفحة تسجيل الدخول
+            window.location.href =
+                "login.html";
+
+
+            return;
+
+        }
+
+
+        const id =
+            document.getElementById("playerId").value.trim();
+
+
+        const method =
+            document.getElementById("paymentMethod").value;
+
+
+        // التحقق من البيانات
+        if (!id || !method) {
+
+            alert(
+                "الرجاء إدخال الـ ID واختيار طريقة الدفع!"
+            );
+
+
+            return;
+
+        }
+
+
+        // شام كاش
+        if (method === "شام كاش") {
+
+            document.getElementById("qrModal").style.display =
+                "flex";
+
+
+            return;
+
+        }
+
+
+        // Google Play
+        if (method === "بطاقات جوجل بلاي") {
+
+            const gCode =
+                document.getElementById("googleCode").value.trim();
+
+
+            if (!gCode) {
+
+                alert(
+                    "الرجاء إدخال كود بطاقة جوجل بلاي!"
+                );
+
+
+                return;
+
+            }
+
+        }
+
+
+        // إرسال الطلب
+        sendWhatsAppOrder();
+
+    }
+
+
+    // ==========================================
+    // إنشاء رسالة واتساب
+    // ==========================================
+
+    function sendWhatsAppOrder() {
+
+        const id =
+            document.getElementById("playerId").value.trim();
+
+
+        const pkg =
+            document.getElementById("package").value;
+
+
+        const method =
+            document.getElementById("paymentMethod").value;
+
+
+        const gCode =
+            document.getElementById("googleCode").value.trim();
+
+
+        let message =
+`🎮 طلب شحن ببجي موبايل جديد
+
+🆔 Player ID: ${id}
+
+📦 الباقة:
+${pkg}
+
+💳 طريقة الدفع:
+${method}`;
+
+
+        // إضافة كود Google Play
+        if (method === "بطاقات جوجل بلاي") {
+
+            message +=
+`\n\n🔑 كود بطاقة جوجل بلاي:
+${gCode}`;
+
+        }
+
+
+        // إنشاء رابط واتساب
+        const whatsappURL =
+            "https://wa.me/" +
+            WHATSAPP_NUMBER +
+            "?text=" +
+            encodeURIComponent(message);
+
+
+        // فتح واتساب
+        window.open(
+            whatsappURL,
+            "_blank"
+        );
+
+    }
+
+
+    // ==========================================
+    // إغلاق النافذة عند الضغط خارجها
+    // ==========================================
+
+    window.onclick = function(event) {
+
+        const modal =
+            document.getElementById("qrModal");
+
+
+        if (event.target === modal) {
+
+            closePopup();
+
+        }
+
+    };
+
+</script>
+
+</body>
+</html>
