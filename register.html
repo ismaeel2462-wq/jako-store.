@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>إنشاء حساب - JAKO STORE</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Tahoma, sans-serif;
+            background: radial-gradient(circle at top, #292929, #121212 50%, #080808);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .register-box {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(30, 30, 30, 0.96);
+            border: 1px solid #333;
+            border-radius: 22px;
+            padding: 35px 28px;
+            box-shadow: 0 10px 40px rgba(0,0,0,.7);
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 30px;
+            font-weight: bold;
+            color: #ff9800;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        .input-group {
+            margin-bottom: 17px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ddd;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            background: #121212;
+            color: white;
+            border: 1px solid #3a3a3a;
+            border-radius: 10px;
+            outline: none;
+            font-size: 15px;
+        }
+
+        input:focus {
+            border-color: #ff9800;
+            box-shadow: 0 0 8px rgba(255,152,0,.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: #ff9800;
+            color: #111;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        button:hover {
+            background: #ffb52e;
+        }
+
+        button:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .secondary-btn {
+            background: transparent;
+            border: 1px solid #444;
+            color: #ff9800;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .secondary-btn:hover {
+            background: rgba(255,152,0,.08);
+        }
+
+        .message {
+            display: none;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 13px;
+            line-height: 1.7;
+            white-space: pre-line;
+        }
+
+        .success {
+            display: block;
+            background: rgba(0,200,100,.1);
+            color: #4cff9b;
+            border: 1px solid rgba(0,200,100,.2);
+        }
+
+        .error {
+            display: block;
+            background: rgba(255,50,50,.1);
+            color: #ff6b6b;
+            border: 1px solid rgba(255,50,50,.2);
+        }
+
+        .login-text,
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 22px;
+            font-size: 14px;
+        }
+
+        .login-text {
+            color: #aaa;
+        }
+
+        a {
+            color: #ff9800;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back {
+            color: #777;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="register-box">
+
+    <div class="logo">🎮 JAKO STORE</div>
+
+    <div class="subtitle">
+        أنشئ حسابك وابدأ بطلب خدماتك
+    </div>
+
+    <form id="registerForm">
+
+        <div class="input-group">
+            <label for="name">الاسم</label>
+
+            <input
+                type="text"
+                id="name"
+                placeholder="أدخل اسمك"
+                autocomplete="name"
+                required
+            >
+        </div>
+
+        <div class="input-group">
+            <label for="email">البريد الإلكتروني</label>
+
+            <input
+                type="email"
+                id="email"
+                placeholder="example@email.com"
+                autocomplete="email"
+                required
+            >
+        </div>
+
+        <div class="input-group">
+            <label for="password">كلمة المرور</label>
+
+            <input
+                type="password"
+                id="password"
+                placeholder="6 أحرف على الأقل"
+                autocomplete="new-password"
+                minlength="6"
+                required
+            >
+        </div>
+
+        <div class="input-group">
+            <label for="confirmPassword">تأكيد كلمة المرور</label>
+
+            <input
+                type="password"
+                id="confirmPassword"
+                placeholder="أعد كتابة كلمة المرور"
+                autocomplete="new-password"
+                minlength="6"
+                required
+            >
+        </div>
+
+        <button type="submit" id="registerBtn">
+            إنشاء الحساب
+        </button>
+
+        <button
+            type="button"
+            class="secondary-btn"
+            id="resendBtn"
+        >
+            إعادة إرسال رسالة التأكيد
+        </button>
+
+        <div id="message" class="message"></div>
+
+    </form>
+
+    <div class="login-text">
+        لديك حساب بالفعل؟
+        <a href="login.html">تسجيل الدخول</a>
+    </div>
+
+    <a href="index.html" class="back">
+        ← العودة إلى المتجر
+    </a>
+
+</div>
+
+<script>
+
+    const SUPABASE_URL =
+        "https://hhstmixtubmsueeinmgl.supabase.co";
+
+    const SUPABASE_KEY =
+        "sb_publishable_tX2-nOQPMGhcnHnelJLIFg_Ya7fygLt";
+
+    const { createClient } = supabase;
+
+    const supabaseClient = createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+    const registerForm =
+        document.getElementById("registerForm");
+
+    const nameInput =
+        document.getElementById("name");
+
+    const emailInput =
+        document.getElementById("email");
+
+    const passwordInput =
+        document.getElementById("password");
+
+    const confirmPasswordInput =
+        document.getElementById("confirmPassword");
+
+    const registerBtn =
+        document.getElementById("registerBtn");
+
+    const resendBtn =
+        document.getElementById("resendBtn");
+
+    const message =
+        document.getElementById("message");
+
+
+    function showMessage(text, type) {
+
+        message.textContent = text;
+
+        message.className =
+            "message " + type;
+
+        message.style.display = "block";
+    }
+
+
+    // ==========================================
+    // إنشاء الحساب
+    // ==========================================
+
+    registerForm.addEventListener(
+        "submit",
+        async function(e) {
+
+            e.preventDefault();
+
+            message.style.display = "none";
+
+            const name =
+                nameInput.value.trim();
+
+            const email =
+                emailInput.value.trim().toLowerCase();
+
+            const password =
+                passwordInput.value;
+
+            const confirmPassword =
+                confirmPasswordInput.value;
+
+
+            if (name.length < 2) {
+
+                showMessage(
+                    "❌ يرجى إدخال اسم صحيح.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (!email.includes("@")) {
+
+                showMessage(
+                    "❌ يرجى إدخال بريد إلكتروني صحيح.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (password.length < 6) {
+
+                showMessage(
+                    "❌ كلمة المرور يجب أن تكون 6 أحرف على الأقل.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (password !== confirmPassword) {
+
+                showMessage(
+                    "❌ كلمتا المرور غير متطابقتين.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            registerBtn.disabled = true;
+
+            registerBtn.textContent =
+                "جاري إنشاء الحساب...";
+
+
+            try {
+
+                const { data, error } =
+                    await supabaseClient.auth.signUp({
+
+                        email: email,
+
+                        password: password,
+
+                        options: {
+
+                            data: {
+                                name: name
+                            }
+
+                        }
+
+                    });
+
+
+                if (error) {
+
+                    throw error;
+
+                }
+
+
+                if (data && data.user) {
+
+                    registerForm.reset();
+
+                    if (data.session) {
+
+                        showMessage(
+                            "✅ تم إنشاء الحساب وتسجيل الدخول بنجاح.",
+                            "success"
+                        );
+
+                    } else {
+
+                        showMessage(
+                            "✅ تم إنشاء الحساب بنجاح.\n\n📧 تحقق من بريدك الإلكتروني واضغط على رابط تأكيد الحساب، ثم انتقل إلى تسجيل الدخول.",
+                            "success"
+                        );
+
+                    }
+
+                } else {
+
+                    showMessage(
+                        "⚠️ لم يتم إنشاء الحساب. حاول مرة أخرى.",
+                        "error"
+                    );
+
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    "Supabase Error:",
+                    error
+                );
+
+
+                let errorMessage =
+                    error.message || "";
+
+
+                if (
+                    errorMessage
+                    .toLowerCase()
+                    .includes("rate limit")
+                ) {
+
+                    errorMessage =
+                        "⏳ تم تجاوز حد إرسال رسائل البريد الإلكتروني مؤقتًا.\n\nانتظر قليلًا قبل محاولة إنشاء حساب جديد أو إعادة إرسال رسالة التأكيد.";
+
+                }
+
+                else if (
+                    errorMessage
+                    .toLowerCase()
+                    .includes("user already registered")
+                ) {
+
+                    errorMessage =
+                        "⚠️ هذا البريد الإلكتروني مسجل مسبقًا.\n\nانتقل إلى صفحة تسجيل الدخول.";
+
+                }
+
+                else if (
+                    errorMessage
+                    .toLowerCase()
+                    .includes("invalid email")
+                ) {
+
+                    errorMessage =
+                        "❌ البريد الإلكتروني غير صحيح.";
+
+                }
+
+                else if (
+                    errorMessage
+                    .toLowerCase()
+                    .includes("password")
+                ) {
+
+                    errorMessage =
+                        "❌ كلمة المرور غير مقبولة.";
+
+                }
+
+                else {
+
+                    errorMessage =
+                        "❌ حدث خطأ أثناء إنشاء الحساب:\n" +
+                        errorMessage;
+
+                }
+
+
+                showMessage(
+                    errorMessage,
+                    "error"
+                );
+
+
+            } finally {
+
+                registerBtn.disabled = false;
+
+                registerBtn.textContent =
+                    "إنشاء الحساب";
+
+            }
+
+        }
+    );
+
+
+    // ==========================================
+    // إعادة إرسال رسالة التأكيد
+    // ==========================================
+
+    resendBtn.addEventListener(
+        "click",
+        async function() {
+
+            const email =
+                emailInput.value.trim().toLowerCase();
+
+
+            if (!email) {
+
+                showMessage(
+                    "❌ أدخل بريدك الإلكتروني أولًا.",
+                    "error"
+                );
+
+                emailInput.focus();
+
+                return;
+            }
+
+
+            resendBtn.disabled = true;
+
+            resendBtn.textContent =
+                "جاري الإرسال...";
+
+
+            try {
+
+                const { error } =
+                    await supabaseClient.auth.resend({
+
+                        type: "signup",
+
+                        email: email
+
+                    });
+
+
+                if (error) {
+
+                    throw error;
+
+                }
+
+
+                showMessage(
+                    "📧 تم طلب إرسال رسالة التأكيد.\n\nتحقق من البريد الوارد ومجلد الرسائل غير المرغوب فيها.",
+                    "success"
+                );
+
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                if (
+                    error.message
+                    .toLowerCase()
+                    .includes("rate limit")
+                ) {
+
+                    showMessage(
+                        "⏳ تم تجاوز حد إرسال البريد مؤقتًا.\n\nانتظر قليلًا ثم حاول مرة أخرى.",
+                        "error"
+                    );
+
+                } else {
+
+                    showMessage(
+                        "❌ تعذر إرسال رسالة التأكيد:\n" +
+                        error.message,
+                        "error"
+                    );
+
+                }
+
+            }
+
+
+            resendBtn.disabled = false;
+
+            resendBtn.textContent =
+                "إعادة إرسال رسالة التأكيد";
+
+        }
+    );
+
+</script>
+
+</body>
+</html>
